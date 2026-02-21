@@ -1,11 +1,7 @@
-[package]
-name = "mqtt-wol"
-version = "0.1.0"
-edition = "2021"
-
 [dependencies]
-# 禁用默认特性以移除 rustls，但必须手动开启 tokio-runtime
-rumqttc = { version = "0.24.0", default-features = false, features = ["tokio-runtime"] }
+# v0.24.0 中，关闭默认特性会去掉 rustls，
+# 但为了保持异步功能正常，我们需要确保 tokio 侧开启了必要特性。
+rumqttc = { version = "0.24.0", default-features = false } 
 wakey = "0.3.0"
 tokio = { version = "1", features = ["rt", "macros", "time"] }
 

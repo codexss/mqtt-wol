@@ -3,9 +3,11 @@ WORKDIR /app
 RUN apk add --no-cache musl-dev
 
 COPY Cargo.toml ./
-COPY src ./src
+RUN mkdir src && echo "fn main() {}" > src/main.rs && cargo build --release
 
-RUN cargo build --release && \
+COPY src ./src
+# 触摸一下文件确保触发重新编译
+RUN touch src/main.rs && cargo build --release && \
     cp target/release/mqtt-wol /mqtt-wol
 
 FROM scratch
