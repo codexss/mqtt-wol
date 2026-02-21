@@ -3,12 +3,8 @@ name = "mqtt-wol"
 version = "0.1.0"
 edition = "2021"
 
-[[bin]]
-name = "mqtt-wol"
-path = "src/main.rs"
-
 [dependencies]
-# v0.24.0 通过禁用默认特性来移除 rustls 依赖
+# v0.24.0 在 alpine 下禁用默认特性即可去掉 TLS 依赖
 rumqttc = { version = "0.24.0", default-features = false }
 wakey = "0.3.0"
 tokio = { version = "1", features = ["rt", "macros", "time"] }
