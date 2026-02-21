@@ -1,0 +1,13 @@
+FROM rust:1.75-alpine AS builder
+WORKDIR /app
+RUN apk add --no-cache musl-dev
+
+COPY Cargo.toml Cargo.lock ./
+COPY src ./src
+
+RUN cargo build --release
+
+FROM scratch
+WORKDIR /app
+COPY --from=builder /app/target/release/mqtt-wol /mqtt-wol
+ENTRYPOINT ["/mqtt-wol"]

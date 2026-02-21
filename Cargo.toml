@@ -1,0 +1,13 @@
+[package]
+name = "mqtt-wol"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "mqtt-wol"
+path = "src/main.rs"
+
+[dependencies]
+rumqttc = "0.24.0"
+wakey = "0.3.0"
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "time"] }
