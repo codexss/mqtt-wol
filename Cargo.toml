@@ -8,14 +8,13 @@ name = "mqtt-wol"
 path = "src/main.rs"
 
 [dependencies]
-rumqttc = "0.24.0"
+rumqttc = { version = "0.24.0", default-features = false } 
 wakey = "0.3.0"
-# 仅保留核心单线程异步运行时
 tokio = { version = "1", features = ["rt", "macros", "time"] }
 
 [profile.release]
-opt-level = "z"      # 优化二进制大小
-lto = true           # 开启链接时优化
-codegen-units = 1    # 牺牲编译速度以换取更小的体积
-panic = "abort"      # 移除异常展开代码
-strip = true         # 移除所有符号表
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
