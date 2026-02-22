@@ -20,9 +20,14 @@ async fn main() {
 
     let sep = if mac_address.contains('-') { '-' } else { ':' };
 
+    let mut current_delay = 1;
+    let max_delay = 60;
+
     loop {
         match eventloop.poll().await {
             Ok(Event::Incoming(Packet::Publish(publish))) => {
+                current_delay = 1; 
+
                 let msg = String::from_utf8_lossy(&publish.payload);
                 if msg.trim() == "on" {
                     println!("📢 收到唤醒指令");
@@ -34,16 +39,17 @@ async fn main() {
                                 println!("✅ 魔术包已发出");
                             }
                         }
-                        Err(_) => {
-                            eprintln!("❌ MAC 地址格式解析失败，请检查配置");
-                        }
+                        Err(_) => eprintln!("❌ MAC 地址格式解析失败，请检查配置"),
                     }
                 }
             }
-            Ok(_) => {}
+            Ok(_) => {
+                current_delay = 1;
+            }
             Err(e) => {
-                eprintln!("⚠️ 连接中断: {:?}", e);
+                eprintln!("⚠️ 连接中断: {:?}, {}秒后重连...", e, current_delay);
+                tokio::time::sleep(Duration::from_secs(current_delay)).await;
+                current_delay = (current_delay * 2).min(max_delay);
             }
         }
     }
-}
