@@ -39,7 +39,9 @@ async fn main() {
                                 println!("✅ 魔术包已发出");
                             }
                         }
-                        Err(_) => eprintln!("❌ MAC 地址格式解析失败，请检查配置"),
+                        Err(_) => {
+                            eprintln!("❌ MAC 地址格式解析失败，请检查配置");
+                        }
                     }
                 }
             }
@@ -53,3 +55,4 @@ async fn main() {
             }
         }
     }
+}
