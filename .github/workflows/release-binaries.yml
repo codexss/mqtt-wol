@@ -1,0 +1,50 @@
+name: Release Binaries
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-upload:
+    name: Build and Upload
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-musl
+            arch_name: amd64
+          - target: aarch64-unknown-linux-musl
+            arch_name: arm64
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Install cross
+        uses: taiki-e/install-action@cross
+
+      - name: Build binary
+        run: cross build --release --target ${{ matrix.target }}
+
+      - name: Rename binary (No Compression)
+        id: prepare
+        run: |
+          FINAL_NAME="mqtt-wol-${{ matrix.arch_name }}"
+          cp target/${{ matrix.target }}/release/mqtt-wol $FINAL_NAME
+          
+          echo "file_name=$FINAL_NAME" >> $GITHUB_OUTPUT
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.prepare.outputs.file_name }}
+          generate_release_notes: true
