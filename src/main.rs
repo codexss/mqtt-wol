@@ -5,13 +5,14 @@ use wakey::WolPacket;
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() {
-    let private_key = env::var("BEMFA_PRIVATE_KEY").expect("环境变量 BEMFA_PRIVATE_KEY 未设置");
-    let topic = env::var("TOPIC").expect("环境变量 TOPIC 未设置");
-    let mac_address = env::var("MAC_ADDRESS").expect("环境变量 MAC_ADDRESS 未设置");
+    let server = env::var("MQTT_SERVER").unwrap_or_else(|_| "bemfa.com".into());
+    let private_key = env::var("MQTT_PRIVATE_KEY").expect("环境变量 MQTT_PRIVATE_KEY 未设置");
+    let topic = env::var("MQTT_WOL_TOPIC").expect("环境变量 MQTT_WOL_TOPIC 未设置");
+    let mac_address = env::var("WOL_MAC_ADDRESS").expect("环境变量 WOL_MAC_ADDRESS 未设置");
 
     println!("🚀 MQTT-WOL 服务已启动");
 
-    let mut mqtt_options = MqttOptions::new(&private_key, "bemfa.com", 9501);
+    let mut mqtt_options = MqttOptions::new(&private_key, &server, 9501);
     mqtt_options.set_keep_alive(Duration::from_secs(30));
 
     let (client, mut eventloop) = AsyncClient::new(mqtt_options, 10);

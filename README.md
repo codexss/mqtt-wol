@@ -2,9 +2,9 @@
 ```
 docker run -d \
   --name mqtt-wol 
-  -e BEMFA_PRIVATE_KEY=你的私钥 \
-  -e TOPIC=你的topic \
-  -e MAC_ADDRESS=AA:BB:CC:DD:EE:FF \
+  -e MQTT_PRIVATE_KEY=你的私钥 \
+  -e MQTT_WOL_TOPIC=你的topic \
+  -e WOL_MAC_ADDRESS=AA:BB:CC:DD:EE:FF \
   --network host \
   lentin/mqtt-wol
 ```
