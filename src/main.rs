@@ -5,8 +5,6 @@ use wakey::WolPacket;
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() {
-    let server = env::var("MQTT_SERVER").unwrap_or_else(|_| "bemfa.com".into());
-    let port = env::var("MQTT_PORT").unwrap_or_else(|_| "9501".into());
     let private_key = env::var("MQTT_PRIVATE_KEY").expect("环境变量 MQTT_PRIVATE_KEY 未设置");
     let topic = env::var("MQTT_WOL_TOPIC").expect("环境变量 MQTT_WOL_TOPIC 未设置");
     let mac_address = env::var("WOL_MAC_ADDRESS").expect("环境变量 WOL_MAC_ADDRESS 未设置");
@@ -20,7 +18,7 @@ async fn main() {
     let max_delay: u64 = 60;
 
     loop {
-        let mut mqtt_options = MqttOptions::new(&private_key, &server, &port);
+        let mut mqtt_options = MqttOptions::new(&private_key, "bemfa.com", 9501);
         mqtt_options.set_keep_alive(Duration::from_secs(30));
 
         let (client, mut eventloop) = AsyncClient::new(mqtt_options, 10);
@@ -89,3 +87,4 @@ async fn main() {
         current_delay = (current_delay * 2).min(max_delay);
     }
 }
+
