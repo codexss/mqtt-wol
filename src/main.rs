@@ -12,7 +12,6 @@ async fn main() {
     let sep = if mac_address.contains('-') { '-' } else { ':' };
 
     println!("🚀 MQTT-WOL 服务已启动");
-    println!("📌 server={server} topic={topic} mac={mac_address}");
 
     let mut current_delay: u64 = 1;
     let max_delay: u64 = 60;
@@ -87,4 +86,5 @@ async fn main() {
         current_delay = (current_delay * 2).min(max_delay);
     }
 }
+
 
